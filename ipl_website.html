@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches</title>
+        <style>
+            body {
+                background-color: #eaf5ff;
+            }
+
+            header {
+                background-color: #c4e3fa; 
+                color:rgb(112, 122, 26);
+                text-align: center;
+                padding: 24px;
+            }
+
+            main {
+                max-width:1200px;
+                /* Centers the content and keeps balanced space around it. */
+                margin:24px auto;
+                padding:24px;
+            }
+            section {
+                background-color: #d7ecff;
+                padding: 24px;
+                /* Keeps a consistent gap after the header and between boxes. */
+                margin:24px 0;
+                border-radius: 60px;
+            }
+            section:nth-of-type(2) {
+                background-color: #bddcf4;
+            }
+            .filter-form-class {
+                display:flex;
+                flex-wrap:wrap;
+                align-items:center;
+                gap:12px;
+            }
+            .filter-form-class select,
+            .reset-btn {
+                padding:10px 16px;
+                border-radius:8px;
+                font-size:16px;
+            }
+            .reset-btn {
+                border:1px solid #8eb4db;
+                cursor:pointer;
+            }
+            .filter-btn {
+                background-color:#d3d3d3;
+                border-color:#121010;
+                color:#595757;
+            }
+            .booking-btn {
+                background-color:#29c36b;
+                border-color:#29c36b;
+                color:#ffffff;
+                display:inline-block;
+                text-decoration:none;
+            }
+            .match-table {
+                width:100%;
+                margin-top:24px;
+                border-collapse:collapse;
+                background-color:#d5e4f2;
+                color:#5c95be;
+            }
+            .match-table th,
+            .match-table td {
+                padding:12px;
+                border:1px solid #7eafd5;
+                text-align:left;
+            }
+            .match-table th {
+                background-color:#c4e3fa;
+            }
+            select button {
+                background-color:#d3d3d3;
+                border-color:#a6a6a6;
+                color:#333333;
+            }
+        </style>
+</head>
+<body>
+<main>
+<header>
+     <h1> 🏏  IPL Match Schedule </h1>
+     <p>Find your Match and book your tickets!</p>
+    </header>
+    <section>
+        
+        <h2>Ticket Booking Information </h2>    
+        <ul>
+            <li>Select your favourite team.</li>
+            <li>Check the match date,time and venue.</li>
+            <li>Compare the available tickets and prices.</li>
+            <li>Click Book to view your selected tickets.</li>
+
+        </ul>
+    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    <section>
+        <h2>Find a Match</h2>
+        <form class="filter-form-class" >
+        <label for="teamfilter">Filter by Name</label>
+        <select id="teamfilter" name="team">
+            <option value="">All Teams</option>
+            <option value="CSK">Chennai Super Kings</option>
+            <option value="MI">Mumbai Indians</option>
+            <option value="RCB">Royal Challengers Bangalore</option>
+            <option value="KKR">Kolkata Knight Riders</option>
+        </select>
+        <button class="reset-btn filter-btn" >Apply Filter  </button>   
+        <button class="reset-btn filter-btn">Show All</button>
+        <button class="reset-btn filter-btn" type="reset">Reset Filter</button>
+        <button class="reset-btn filter-btn">Show Defaults</button>
+        </form>
+        <table class="match-table">
+            <caption>Upcoming Matches</caption>
+            <thead>
+                <tr>
+                    <th>Match</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Tickets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Chennai Super Kings vs Mumbai Indians</td>
+                    <td>20-11-2026</td>
+                    <td>Chinnaswamy Stadium</td>
+                    <td><a class="reset-btn booking-btn" href="Booking-validate.html?teams=Chennai%20Super%20Kings%20vs%20Mumbai%20Indians&amp;date=20-11-2026&amp;venue=Chinnaswamy%20Stadium">Book Ticket</a></td>
+                </tr>
+                <tr>
+                    <td>Royal Challengers Bangalore vs Kolkata Knight Riders</td>
+                    <td>22-11-2026</td>
+                    <td>Mutthuswamy Stadium</td>
+                    <td><a class="reset-btn booking-btn" href="Booking-validate.html?teams=Royal%20Challengers%20Bangalore%20vs%20Kolkata%20Knight%20Riders&amp;date=22-11-2026&amp;venue=Mutthuswamy%20Stadium">Book Ticket</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+</main>
+</body>
+</html>

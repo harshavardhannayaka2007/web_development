@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Ticket Booking Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding-bottom: 40px;
+        }
+        header {
+            background-color: #0b1a30;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        h2 {
+            color: #0b1a30;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f4f6f9;
+            padding-bottom: 8px;
+        }
+        .match-details p {
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .error-text {
+            color: #e21d24;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 4px;
+        }
+        .price-display {
+            background-color: #eef7ee;
+            border: 1px solid #cce8cc;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: center;
+            color: #2e7d32;
+        }
+        button {
+            width: 100%;
+            background-color: #e21d24;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #c6161c;
+        }
+        #viewHistoryButton {
+            background-color: #0b1a30;
+        }
+        #viewHistoryButton:hover {
+            background-color: #050d1a;
+        }
+        .hidden {
+            display: none;
+        }
+        #historyContainer {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        th,
+        td {
+            border: 1px solid #dddddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f4f6f9;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>IPL Ticket Booking Portal</h1>
+    </header>
+    <div class="container">
+        <section class="card">
+            <h2>Match Information</h2>
+            <div class="match-details">
+                <p><strong>Match:</strong> <span id="displayTeams">Mumbai Indians vs Chennai Super Kings</span></p>
+                <p><strong>Date:</strong> <span id="displayDate">18 May 2026</span></p>
+                <p><strong>Time:</strong> <span id="displayTime">Not specified</span></p>
+                <p><strong>Venue:</strong> <span id="displayVenue">Wankhede Stadium, Mumbai</span></p>
+            </div>
+        </section>
+        <section class="card" id="personal-information-tickets">
+            <h2>Personal Information &amp; Tickets</h2>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label for="customerName">Full Name</label>
+                    <input type="text" id="customerName" name="customerName" placeholder="Enter your name">
+                    <span class="error-text" id="nameError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email Address</label>
+                    <input type="email" id="customerEmail" name="customerEmail" placeholder="Enter your email">
+                    <span class="error-text" id="emailError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="userMobile">Mobile Number</label>
+                    <input type="tel" id="userMobile" name="userMobile" placeholder="Enter 10-digit mobile number" maxlength="10">
+                    <span class="error-text" id="mobileError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="zoneSelect">Select Stand</label>
+                    <select id="zoneSelect" name="zone">
+                        <option value="">Choose a ticket type</option>
+                        <option value="1200">General Stands - ₹1,200</option>
+                        <option value="2500">East Gallery - ₹2,500</option>
+                        <option value="5000">Grand Stand - ₹5,000</option>
+                        <option value="12000">VIP Lounge - ₹12,000</option>
+                    </select>
+                    <span class="error-text" id="zoneError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="ticketQuantity">Number of Tickets</label>
+                    <input type="number" id="ticketQuantity" name="ticketQuantity" min="1" max="10" value="1">
+                    <span class="error-text" id="quantityError"></span>
+                </div>
+                <div class="price-display" id="priceDisplay">
+                    <h3>Total Amount: ₹<span id="totalAmount">0</span></h3>
+                </div>
+                <button type="submit" id="bookButton">Confirm Booking</button>
+                <button type="button" id="viewHistoryButton">View Booking History</button>
+            </form>
+        </section>
+        <section class="card hidden" id="historyContainer">
+            <h2>Booking History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Team</th>
+                        <th>Stand</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Tickets</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingHistoryBody">
+                    <tr>
+                        <td colspan="6">No bookings yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Read the parameters directly from the browser window's current URL
+            var urlParams = new URLSearchParams(window.location.search);
+
+            var teams = urlParams.get('teams');
+            var date = urlParams.get('date');
+            var venue = urlParams.get('venue');
+
+            // Update the page text content if values exist in the URL
+            if (teams) {
+                document.getElementById('displayTeams').textContent = teams;
+            }
+            if (date) {
+                document.getElementById('displayDate').textContent = date;
+            }
+            if (venue) {
+                document.getElementById('displayVenue').textContent = venue;
+            }
+        });
+
+        // Get DOM Element Objects
+        var userNameInput = document.getElementById("customerName");
+        var userEmailInput = document.getElementById("customerEmail");
+        var userMobileInput = document.getElementById("userMobile");
+
+        var nameError = document.getElementById("nameError");
+        var emailError = document.getElementById("emailError");
+        var mobileError = document.getElementById("mobileError");
+
+        var standTypeSelect = document.getElementById("zoneSelect");
+        var ticketCountInput = document.getElementById("ticketQuantity");
+        var totalAmountSpan = document.getElementById("totalAmount");
+        var viewHistoryButton = document.getElementById("viewHistoryButton");
+        var historyContainer = document.getElementById("historyContainer");
+        var historyBody = document.getElementById("bookingHistoryBody");
+
+        function updateTotalPrice() {
+            var ticketPrice = parseInt(standTypeSelect.value);
+            var count = parseInt(ticketCountInput.value);
+
+            if (isNaN(ticketPrice) || isNaN(count) || count < 1) {
+                totalAmountSpan.innerText = 0;
+                return;
+            }
+
+            var total = ticketPrice * count;
+            totalAmountSpan.innerText = total;
+        }
+
+        
+        function validateForm() {
+            var isValid = true;
+
+   
+            nameError.innerText = "";
+            emailError.innerText = "";
+            mobileError.innerText = "";
+
+         
+            var nameValue = userNameInput.value.trim();
+            if (nameValue === "") {
+                nameError.innerText = "Name is required.";
+                isValid = false;
+            }
+            var emailValue = userEmailInput.value.trim();
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailValue === "") {
+                emailError.innerText = "Email is required.";
+                isValid = false;
+            } else if (emailPattern.test(emailValue) === false) {
+                emailError.innerText = "Please enter a valid email address.";
+                isValid = false;
+            }
+
+            
+            
+            var mobileValue = userMobileInput.value.trim();
+            var mobilePattern = /^[6-9][0-9]{9}$/;
+            if (mobileValue === "") {
+                mobileError.innerText = "Mobile number is required.";
+                isValid = false;
+            } else if (mobilePattern.test(mobileValue) === false) {
+                mobileError.innerText = "Mobile number must be exactly 10 digits.";
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+       
+        function handleBooking() {
+            
+            if (validateForm() === false) {
+                return;
+            }
+
+            var ticketPrice = parseInt(standTypeSelect.value);
+            var count = parseInt(ticketCountInput.value);
+
+            if (isNaN(ticketPrice) || isNaN(count) || count < 1) {
+                alert("Please enter a valid number of tickets.");
+                return;
+            }
+
+            var total = ticketPrice * count;
+            var selectedStandText = standTypeSelect.options[standTypeSelect.selectedIndex].text;
+
+            var newBooking = {
+                team: document.getElementById("displayTeams").textContent,
+                name: userNameInput.value.trim(),
+                email: userEmailInput.value.trim(),
+                mobile: userMobileInput.value.trim(),
+                stand: selectedStandText,
+                tickets: count,
+                totalPrice: total
+            };
+
+        
+            var existingBookings = localStorage.getItem("iplBookings");
+            var bookingsArray;
+
+            if (existingBookings === null) {
+                bookingsArray = [];
+            } else {
+                bookingsArray = JSON.parse(existingBookings);
+            }
+
+          
+            bookingsArray.push(newBooking);
+            localStorage.setItem("iplBookings", JSON.stringify(bookingsArray));
+
+            alert("Tickets booked successfully!");
+
+        
+            userNameInput.value = "";
+            userEmailInput.value = "";
+            userMobileInput.value = "";
+            ticketCountInput.value = 1;
+            updateTotalPrice();
+
+           
+            if (historyContainer && !historyContainer.classList.contains("hidden")) {
+                renderHistoryTable();
+            }
+        }
+
+        function renderHistoryTable() {
+            var existingBookings = localStorage.getItem("iplBookings");
+            var bookingsArray = existingBookings === null ? [] : JSON.parse(existingBookings);
+            historyBody.innerHTML = "";
+
+            if (bookingsArray.length === 0) {
+                var emptyRow = historyBody.insertRow();
+                var emptyCell = emptyRow.insertCell();
+                emptyCell.colSpan = 6;
+                emptyCell.textContent = "No bookings yet.";
+                return;
+            }
+
+            bookingsArray.forEach(function(booking) {
+                var row = historyBody.insertRow();
+                [
+                    booking.team || "",
+                    booking.stand || "",
+                    booking.name || "",
+                    booking.mobile || "",
+                    booking.tickets || "",
+                    booking.totalPrice || 0
+                ].forEach(function(value) {
+                    row.insertCell().textContent = value;
+                });
+            });
+        }
+
+        function toggleHistoryView() {
+            renderHistoryTable();
+            historyContainer.classList.toggle("hidden");
+        }
+        standTypeSelect.addEventListener("change", updateTotalPrice);
+        ticketCountInput.addEventListener("input", updateTotalPrice);
+        document.getElementById("bookingForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            handleBooking();
+        });
+        viewHistoryButton.addEventListener("click", toggleHistoryView);
+    </script>
+</body>
+</html>

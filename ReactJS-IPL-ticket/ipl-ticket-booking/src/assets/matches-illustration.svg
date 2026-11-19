@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 280" fill="none">
+  <rect x="10" y="12" width="460" height="256" rx="26" fill="#F8F1E9"/>
+  <circle cx="386" cy="61" r="25" fill="#F1D38A"/>
+  <path d="M56 185c22-56 87-91 184-91s162 35 184 91" stroke="#9BB4B0" stroke-width="12" stroke-linecap="round"/>
+  <path d="M76 190c34-32 89-49 164-49s130 17 164 49" stroke="#D3DFD8" stroke-width="18" stroke-linecap="round"/>
+  <path d="M35 220c46-29 117-43 205-43s159 14 205 43v25H35v-25Z" fill="#A8C6AE"/>
+  <rect x="94" y="59" width="292" height="112" rx="17" fill="#FFFDF8" stroke="#D9D4CA" stroke-width="3"/>
+  <rect x="113" y="79" width="88" height="72" rx="13" fill="#B85354"/>
+  <rect x="279" y="79" width="88" height="72" rx="13" fill="#4B7399"/>
+  <text x="157" y="122" fill="#FFF" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle">RCB</text>
+  <text x="323" y="122" fill="#FFF" font-family="Arial,sans-serif" font-size="24" font-weight="700" text-anchor="middle">MI</text>
+  <text x="240" y="121" fill="#77858B" font-family="Arial,sans-serif" font-size="17" font-weight="700" text-anchor="middle">VS</text>
+  <circle cx="407" cy="193" r="22" fill="#CC5A53"/>
+  <path d="M397 176c15 11 22 25 22 40m-20-40c-6 15-5 30 4 41" stroke="#F3D2CC" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M206 222h68" stroke="#F4F4E9" stroke-width="3" stroke-linecap="round"/>
+</svg>
