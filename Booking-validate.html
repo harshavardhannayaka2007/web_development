@@ -20,6 +20,7 @@
             background-color: #c478f0;
             color: #333;
             padding-bottom: 40px;
+            min-width: 0;
         }
 
         header {
@@ -149,6 +150,73 @@
         th {
             background-color: #f4f6f9;
             font-weight: bold;
+        }
+
+        .table-scroll {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .table-scroll table {
+            min-width: 680px;
+        }
+
+        .table-scroll::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .table-scroll::-webkit-scrollbar-track {
+            background: #eadcf3;
+            border-radius: 10px;
+        }
+
+        .table-scroll::-webkit-scrollbar-thumb {
+            background: #092d63;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 720px) {
+            body {
+                padding-bottom: 20px;
+            }
+
+            header {
+                margin-bottom: 16px;
+                padding: 16px 12px;
+            }
+
+            header h1 {
+                font-size: 1.35rem;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            input,
+            select,
+            button {
+                min-height: 44px;
+            }
+
+            .match-details p {
+                overflow-wrap: anywhere;
+            }
         }
     </style>
 </head>

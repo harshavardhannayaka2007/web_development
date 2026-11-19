@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matches</title>
         <style>
+            * {
+                box-sizing: border-box;
+            }
+
             body {
                 background-color: #eaf5ff;
+                margin: 0;
+                min-width: 0;
             }
 
             header {
@@ -18,6 +24,7 @@
 
             main {
                 max-width:1200px;
+                width: 100%;
                 /* Centers the content and keeps balanced space around it. */
                 margin:24px auto;
                 padding:24px;
@@ -28,6 +35,7 @@
                 /* Keeps a consistent gap after the header and between boxes. */
                 margin:24px 0;
                 border-radius: 60px;
+                min-width: 0;
             }
             section:nth-of-type(2) {
                 background-color: #bddcf4;
@@ -62,10 +70,41 @@
             }
             .match-table {
                 width:100%;
+                min-width: 680px;
                 margin-top:24px;
                 border-collapse:collapse;
                 background-color:#d5e4f2;
                 color:#5c95be;
+            }
+            .table-scroll {
+                width: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                border-radius: 12px;
+                margin-top: 24px;
+            }
+            .table-scroll .match-table {
+                margin-top: 0;
+            }
+            .scroll-hint {
+                display: none;
+                margin: 10px 2px 0;
+                color: #365d7d;
+                font-size: 0.85rem;
+                font-weight: bold;
+            }
+            .table-scroll::-webkit-scrollbar {
+                height: 10px;
+            }
+            .table-scroll::-webkit-scrollbar-track {
+                background: #b9d8ef;
+                border-radius: 10px;
+            }
+            .table-scroll::-webkit-scrollbar-thumb {
+                background: #5c95be;
+                border-radius: 10px;
             }
             .match-table th,
             .match-table td {
@@ -80,6 +119,50 @@
                 background-color:#d3d3d3;
                 border-color:#a6a6a6;
                 color:#333333;
+            }
+
+            @media (max-width: 720px) {
+                header {
+                    padding: 18px 12px;
+                }
+
+                header h1 {
+                    font-size: 1.45rem;
+                }
+
+                main {
+                    margin: 0 auto;
+                    padding: 12px;
+                }
+
+                section {
+                    padding: 16px;
+                    margin: 12px 0;
+                    border-radius: 24px;
+                }
+
+                .filter-form-class {
+                    align-items: stretch;
+                }
+
+                .filter-form-class label,
+                .filter-form-class select,
+                .filter-form-class .reset-btn {
+                    width: 100%;
+                }
+
+                .match-table th,
+                .match-table td {
+                    padding: 10px;
+                }
+
+                .booking-btn {
+                    white-space: nowrap;
+                }
+
+                .scroll-hint {
+                    display: block;
+                }
             }
         </style>
 </head>
@@ -116,6 +199,8 @@
         <button class="reset-btn filter-btn" type="reset">Reset Filter</button>
         <button class="reset-btn filter-btn">Show Defaults</button>
         </form>
+        <div class="table-scroll" role="region" aria-label="Upcoming matches table" tabindex="0">
+        <p class="scroll-hint">Swipe or scroll sideways to see the full table.</p>
         <table class="match-table">
             <caption>Upcoming Matches</caption>
             <thead>
@@ -141,6 +226,7 @@
                 </tr>
             </tbody>
         </table>
+        </div>
     </section>
     
 </main>
