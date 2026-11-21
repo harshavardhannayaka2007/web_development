@@ -1,81 +1,99 @@
-import { getAuthenticatedUserId, supabase } from './supabase'
+import { supabase } from './supabase'
 
-const STORAGE_KEY = 'ipl-ticket-bookings-v1'
+const HISTORY_TOKENS_KEY = 'ipl-ticket-history-tokens-v1'
 
-function readLocalBookings() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-
-    const bookings = JSON.parse(raw)
-    if (!Array.isArray(bookings)) {
-      throw new Error('Stored bookings are not in the expected format.')
-    }
-
-    return bookings
-  } catch (error) {
-    throw new Error(`Could not read local bookings: ${error.message}`, { cause: error })
+function requireSupabase() {
+  if (!supabase) {
+    throw new Error('Supabase is not configured. Set its URL and publishable key in .env, then restart Vite.')
   }
 }
 
-function writeLocalBooking(booking) {
+function readHistoryTokens() {
   try {
-    const bookings = readLocalBookings()
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([booking, ...bookings]))
+    const raw = localStorage.getItem(HISTORY_TOKENS_KEY)
+    if (!raw) return []
+
+    const tokens = JSON.parse(raw)
+    if (!Array.isArray(tokens) || tokens.some((token) => typeof token !== 'string')) {
+      throw new Error('Saved booking access tokens are not in the expected format.')
+    }
+
+    return tokens
   } catch (error) {
-    throw new Error(`Could not save the booking: ${error.message}`, { cause: error })
+    throw new Error(`Could not read booking history access: ${error.message}`, { cause: error })
   }
+}
+
+function storeHistoryToken(token) {
+  const tokens = readHistoryTokens()
+  if (tokens.includes(token)) return
+
+  try {
+    localStorage.setItem(HISTORY_TOKENS_KEY, JSON.stringify([...tokens, token]))
+  } catch (error) {
+    throw new Error(`Could not save booking history access: ${error.message}`, { cause: error })
+  }
+}
+
+function createHistoryToken() {
+  if (!globalThis.crypto?.randomUUID) {
+    throw new Error('This browser cannot create a secure booking access token.')
+  }
+
+  return globalThis.crypto.randomUUID()
 }
 
 export async function saveBooking(booking) {
-  if (supabase) {
-    const ownerId = await getAuthenticatedUserId()
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert({
-        name: booking.name,
-        tickets: booking.tickets,
-        stand: booking.stand,
-        venue: booking.venue,
-        place: booking.place,
-        owner_id: ownerId,
-      })
-      .select('id, name, tickets, stand, venue, place, created_at')
-      .single()
-    if (error) {
-      throw new Error(`Could not save booking to Supabase: ${error.message}`)
+  requireSupabase()
+
+  const historyToken = createHistoryToken()
+  storeHistoryToken(historyToken)
+
+  const { data, error } = await supabase.rpc('create_guest_booking', {
+    p_history_token: historyToken,
+    p_name: booking.name,
+    p_email: booking.email,
+    p_phone: booking.phone || null,
+    p_match_id: booking.match_id,
+    p_tickets: booking.tickets,
+    p_stand: booking.stand,
+    p_position: booking.position,
+  })
+
+  if (error) {
+    if (error.code === 'PGRST202') {
+      throw new Error('Supabase booking functions are not installed. Run supabase/guest-bookings.sql in the Supabase SQL Editor.')
     }
-    return data
+    throw new Error(`Could not save booking to Supabase: ${error.message}`)
+  }
+  if (!data || typeof data !== 'object' || data.history_token !== historyToken) {
+    throw new Error('Supabase saved the booking but did not return its history access token.')
   }
 
-  const localBooking = {
-    ...booking,
-    id: Date.now(),
-    created_at: new Date().toISOString(),
-  }
-  writeLocalBooking(localBooking)
-  return localBooking
+  return data
 }
 
 export async function getBookingsByVenue(venue = 'all') {
-  if (supabase) {
-    const ownerId = await getAuthenticatedUserId()
-    let query = supabase
-      .from('bookings')
-      .select('id, name, tickets, stand, venue, place, created_at')
-      .eq('owner_id', ownerId)
-      .order('created_at', { ascending: false })
-    if (venue !== 'all') {
-      query = query.eq('venue', venue)
-    }
+  requireSupabase()
 
-    const { data, error } = await query
-    if (error) {
-      throw new Error(`Could not load bookings from Supabase: ${error.message}`)
+  const historyTokens = readHistoryTokens()
+  if (historyTokens.length === 0) return []
+
+  const { data, error } = await supabase.rpc('get_guest_bookings', {
+    p_history_tokens: historyTokens,
+  })
+
+  if (error) {
+    if (error.code === 'PGRST202') {
+      throw new Error('Supabase booking functions are not installed. Run supabase/guest-bookings.sql in the Supabase SQL Editor.')
     }
-    return data
+    throw new Error(`Could not load bookings from Supabase: ${error.message}`)
+  }
+  if (!Array.isArray(data)) {
+    throw new Error('Supabase returned booking history in an unexpected format.')
   }
 
-  const bookings = readLocalBookings()
-  return venue === 'all' ? bookings : bookings.filter((booking) => booking.venue === venue)
+  return venue === 'all'
+    ? data
+    : data.filter((booking) => booking.venue === venue || booking.place === venue)
 }

@@ -22,6 +22,13 @@ export const matches = [
   },
 ]
 
+export const stadiumSections = [
+  'Section A · Lower tier',
+  'Section B · Mid tier',
+  'Section C · Upper tier',
+  'Section D · Corner view',
+]
+
 export function formatCurrency(amount) {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
